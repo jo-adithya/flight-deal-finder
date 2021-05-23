@@ -28,9 +28,9 @@ def check_flights(from_city, to_city, from_date, to_date):
         'date_to': to_date,
         'nights_in_dst_from': 5,
         'nights_in_dst_to': 14,
-        'flight_type': round,
+        'flight_type': 'round',
         'one_for_city': 1,
-        "max_stopovers": 2,
+        "max_stopovers": 0,
         'curr': 'IDR'
     }
     response = requests.get(url=f'{TEQUILA_ENDPOINT}/v2/search', params=parameters, headers=headers)
@@ -43,11 +43,11 @@ def check_flights(from_city, to_city, from_date, to_date):
 
     return FlightData(
         price=data['price'],
-        airline=data['route']['airline'],
-        from_city=data['route']['cityFrom'],
-        to_city=data['route']['cityTo'],
-        from_airport=data['route']['flyFrom'],
-        to_airport=data['route']['flyTo'],
-        from_date=data['route']['utc_departure'].split('T')[0] + ' UTC',
+        airline=data['route'][0]['airline'],
+        from_city=data['route'][0]['cityFrom'],
+        to_city=data['route'][0]['cityTo'],
+        from_airport=data['route'][0]['flyFrom'],
+        to_airport=data['route'][0]['flyTo'],
+        from_date=data['route'][0]['utc_departure'].split('T')[0] + ' UTC',
         return_date=data["route"][1]["local_departure"].split("T")[0] + ' UTC'
     )
