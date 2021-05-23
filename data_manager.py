@@ -28,8 +28,7 @@ class DataManager:
         for city in self.sheet_data:
             new_data = {
                 'price': {
-                    'iataCode': 'IATA Code'
+                    'iataCode': city['iataCode']
                 }
             }
-            response = requests.put(url=f'{sheety_url}/{city["id"]}', json=new_data)
-            print(response.text)
+            requests.put(url=f'{sheety_url}/{city["id"]}', json=new_data, headers=headers)
