@@ -19,3 +19,8 @@ class DataManager:
     def __init__(self):
         self.sheet_data = {}
 
+    def get_sheet_data(self):
+        response = requests.get(url=sheety_url, headers=headers)
+        self.sheet_data = response.json()['prices']
+        return self.sheet_data
+
