@@ -24,3 +24,12 @@ class DataManager:
         self.sheet_data = response.json()['prices']
         return self.sheet_data
 
+    def update_code(self):
+        for city in self.sheet_data:
+            new_data = {
+                'price': {
+                    'iataCode': 'IATA Code'
+                }
+            }
+            response = requests.put(url=f'{sheety_url}/{city["id"]}', json=new_data)
+            print(response.text)
