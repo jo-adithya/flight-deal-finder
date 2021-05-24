@@ -36,10 +36,29 @@ def check_flights(from_city, to_city, from_date, to_date):
     response = requests.get(url=f'{TEQUILA_ENDPOINT}/v2/search', params=parameters, headers=headers)
 
     try:
-        data = response.json()["data"][0]
+        data = response.json()['data'][0]
     except IndexError:
-        print(f'No flights found for {to_city} in a span of six months.')
-        return
+        # Stopover: 1
+        parameters['max_stopovers'] = 1
+        response = requests.get(url=f'{TEQUILA_ENDPOINT}/v2/search', params=parameters, headers=headers)
+
+        try:
+            data = response.json()['data'][0]
+            return FlightData(
+                price=data['price'],
+                airline=data['route'][0]['airline'],
+                from_city=data['route'][0]['cityFrom'],
+                to_city=data['route'][1]['cityTo'],
+                from_airport=data['route'][0]['flyFrom'],
+                to_airport=data['route'][1]['flyTo'],
+                from_date=data['route'][0]['utc_departure'].split('T')[0] + ' UTC',
+                return_date=data["route"][2]["utc_departure"].split("T")[0] + ' UTC',
+                stop_over=1,
+                via_city=data['route'][0]['cityTo']
+            )
+        except IndexError:
+            print(f'No flights found for {to_city} in a span of six months.')
+            return
 
     return FlightData(
         price=data['price'],
