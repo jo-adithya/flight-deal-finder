@@ -21,3 +21,14 @@ class NotificationManager:
             to=os.environ.get('PHONE_NUMBER')
         )
 
+    @staticmethod
+    def send_emails(user_details, message, link):
+        with smtplib.SMTP('smtp.gmail.com', port=587) as connection:
+            connection.starttls()
+            connection.login(user=my_email, password=my_password)
+            for email, name in user_details:
+                connection.sendmail(
+                    from_addr=my_email,
+                    to_addrs=email,
+                    msg=f'Subject:New Low Price Flight\n\nDear {name},\n\n{message}\n{link}'.encode('utf-8')
+                )
